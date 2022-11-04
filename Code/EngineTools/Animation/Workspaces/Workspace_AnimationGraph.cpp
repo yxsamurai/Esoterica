@@ -380,7 +380,7 @@ namespace EE::Animation
 
                             constexpr float const editRegionRadius = 10.0f;
                             float const distanceFromCircleOrigin = mousePos.GetDistance2( circleOrigin );
-   
+
                             // Manage edit state
                             if ( !m_isEditingValueWithMouse )
                             {
@@ -946,7 +946,7 @@ namespace EE::Animation
 
             ImGui::Checkbox( "Show Preview Capsule", &m_showPreviewCapsule );
 
-            ImGui::Text( "Half-Height" ); 
+            ImGui::Text( "Half-Height" );
             ImGui::SameLine( 90 );
             if ( ImGui::InputFloat( "##HH", &m_previewCapsuleHalfHeight, 0.05f ) )
             {
@@ -1376,7 +1376,7 @@ namespace EE::Animation
         //-------------------------------------------------------------------------
 
         RefreshControlParameterCache();
-    
+
         //-------------------------------------------------------------------------
 
         TWorkspace<GraphDefinition>::PostUndoRedo( operation, pAction );
@@ -1681,7 +1681,10 @@ namespace EE::Animation
                 // Create a preview mesh component
                 m_pDebugMeshComponent = EE::New<Render::SkeletalMeshComponent>( StringID( "Mesh Component" ) );
                 m_pDebugMeshComponent->SetSkeleton( pVariation->m_skeleton.GetResourceID() );
-                m_pDebugMeshComponent->SetMesh( resourceDesc.m_previewMesh.GetResourceID() );
+                if (resourceDesc.m_previewMesh.GetResourceID().IsValid())
+                {
+                    m_pDebugMeshComponent->SetMesh( resourceDesc.m_previewMesh.GetResourceID() );
+                }
                 m_pPreviewEntity->AddComponent( m_pDebugMeshComponent );
             }
         }
@@ -2339,7 +2342,7 @@ namespace EE::Animation
         ImGui::End();
         ImGui::PopStyleVar();
 
-        // Handle Focus and selection 
+        // Handle Focus and selection
         //-------------------------------------------------------------------------
 
         VisualGraph::GraphView* pCurrentlyFocusedGraphView = nullptr;
@@ -3355,7 +3358,7 @@ namespace EE::Animation
         EE_ASSERT( pControlParameter != nullptr || pVirtualParameter != nullptr );
         EE_ASSERT( pControlParameter == nullptr || pVirtualParameter == nullptr );
 
-        if ( pControlParameter == nullptr )
+        if ( pControlParameter != nullptr )
         {
             originalParameterName = pControlParameter->GetParameterName();
             originalParameterCategory = pControlParameter->GetParameterCategory();
@@ -3912,7 +3915,7 @@ namespace EE::Animation
             for ( auto pDataSlotNode : dataSlotNodes )
             {
                 String const nodePath = pDataSlotNode->GetPathFromRoot();
-            
+
                 // Apply filter
                 //-------------------------------------------------------------------------
 
@@ -3925,7 +3928,7 @@ namespace EE::Animation
                     for ( auto const& token : m_splitFilter )
                     {
                         if ( nameLower.find( token ) == String::npos )
-                        { 
+                        {
                             nameFailedFilter = true;
                             break;
                         }
